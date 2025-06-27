@@ -1,0 +1,59 @@
+{
+  "name": "sahdevpalaniya/laravel-multi-sso",
+  "description": "Laravel package for integrating multiple SSO providers",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sahdev Palaniya",
+      "email": "sahdevsinhpalaniya98@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "laravel/framework": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
+    "guzzlehttp/guzzle": "^7.0",
+    "league/oauth2-client": "^2.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sahdev\\SSO\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Sahdev\\SSO\\SSOServiceProvider"
+      ],
+      "aliases": {
+        "SSO": "Sahdev\\SSO\\Facades\\SSO"
+      }
+    }
+  },
+  "support": {
+    "issues": "https://github.com/sahdevpalaniya/laravel-multi-sso/issues",
+    "source": "https://github.com/sahdevpalaniya/laravel-multi-sso",
+    "docs": "https://github.com/sahdevpalaniya/laravel-multi-sso/wiki",
+    "email": "sahdevsinhpalaniya98@gmail.com"
+  },
+  "keywords": [
+    "laravel",
+    "sso",
+    "single sign-on",
+    "multi-sso",
+    "oauth",
+    "oauth2",
+    "github",
+    "google",
+    "jumpcloud",
+    "linkedin",
+    "twitter",
+    "laravel-sso",
+    "laravel-authentication",
+    "laravel-oauth",
+    "social-login",
+    "laravel-security"
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

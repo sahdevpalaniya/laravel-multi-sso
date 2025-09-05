@@ -54,6 +54,5 @@
     "social-login",
     "laravel-security"
   ],
-  "minimum-stability": "dev",
   "prefer-stable": true
 }

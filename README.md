@@ -213,10 +213,16 @@ Route::post('/sso/aws/login', function (Request $request) {
 | `username` | `string` | Yes      | User's username. |
 | `password` | `string` | Yes      | User's password. |
 
+
+**✅ Notes**:
+1. If the user is already logged in, there is no need to call the login() method again before logout and getUserDetails.
+2. Ideally, logout and getUserDetails should directly use the current user's valid access token.
+
 #### Get User Details
 
 ```php
-Route::post('/aws/user-details', function ($awsResponse) {
+Route::post('/aws/user-details', function (Reuqest $request) {
+    $awsResponse = SSO::driver('aws')->login($request);
     $awsUserDetails = SSO::driver('aws')->getUserDetails($awsResponse['data']['accessToken']);
     return response()->json($awsUserDetails);
 })->name('aws.user-details');
@@ -229,7 +235,8 @@ Route::post('/aws/user-details', function ($awsResponse) {
 #### Logout User
 
 ```php
-Route::post('/sso/aws/logout', function ($awsResponse) {
+Route::post('/sso/aws/logout', function (Reuqest $request) {
+    $awsResponse = SSO::driver('aws')->login($request);
     $response = SSO::driver('aws')->logout($awsResponse['data']['accessToken']);
     return response()->json($response);
 })->name('aws.logout');

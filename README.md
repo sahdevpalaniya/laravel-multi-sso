@@ -181,11 +181,25 @@ SSO_AWS_COGNITO_USER_POOL_ID=your-aws-cognito-user-pool-id
 
 #### Register User
 
+To register a new user, you can call the `register` method with an array of user data.
+
 ```php
 Route::post('/sso/aws/register', function (Request $request) {
-    $response = SSO::driver('aws')->register($request);
+    $userData = $request->all();
+    $response = SSO::driver('aws')->register($userData);
     return response()->json($response);
 })->name('aws.register');
+```
+
+You can also call the `register` method directly in your code:
+```php
+$userData = [
+    'username' => 'testuser',
+    'password' => 'Password123!',
+    'email' => 'test@example.com',
+    // ... other optional attributes
+];
+$response = SSO::driver('aws')->register($userData);
 ```
 
 | Parameter      | Type     | Required | Description                              |
@@ -201,11 +215,23 @@ Route::post('/sso/aws/register', function (Request $request) {
 
 #### Login User
 
+To log in a user, you can call the `login` method with an array containing the user's credentials.
+
 ```php
 Route::post('/sso/aws/login', function (Request $request) {
-    $response = SSO::driver('aws')->login($request);
+    $credentials = $request->only('username', 'password');
+    $response = SSO::driver('aws')->login($credentials);
     return response()->json($response);
 })->name('aws.login');
+```
+
+You can also call the `login` method directly in your code:
+```php
+$credentials = [
+    'username' => 'testuser',
+    'password' => 'Password123!',
+];
+$response = SSO::driver('aws')->login($credentials);
 ```
 
 | Parameter  | Type     | Required | Description      |

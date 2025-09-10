@@ -2,7 +2,6 @@
 
 namespace Sahdev\SSO\Providers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,7 +62,7 @@ class AWSProvider
         return $mappedAttributes;
     }
 
-    public function register(Request $request)
+    public function register(array $_data)
     {
         try {
             $validationRules = [
@@ -84,18 +83,18 @@ class AWSProvider
                 'website_url' => 'nullable|url',
             ];
 
-            $validator = Validator::make($request->all(), $validationRules);
+            $validator = Validator::make($_data, $validationRules);
 
             if ($validator->fails()) {
                 return $this->formatResponse('error', 400, 'Validation failed', $validator->errors());
             }
 
-            $username = $request->username;
-            $password = $request->password;
+            $username = $_data['username'];
+            $password = $_data['password'];
             $secretHash = $this->calculateSecretHash($username);
 
             // Map user-provided attributes to AWS Cognito attributes
-            $mappedAttributes = $this->mapAttributes($request->all());
+            $mappedAttributes = $this->mapAttributes($_data);
 
             $userAttributes = array_map(function ($key, $value) {
                 return ['Name' => $key, 'Value' => $value];
@@ -124,10 +123,10 @@ class AWSProvider
         }
     }
 
-    public function login(Request $request)
+    public function login(array $_data)
     {
         try {
-            $validator = Validator::make($request->all(), [
+            $validator = Validator::make($_data, [
                 'username' => 'required|string|max:40',
                 'password' => 'required|string|min:8',
             ]);
@@ -136,8 +135,8 @@ class AWSProvider
                 return $this->formatResponse('error', 400, 'Validation failed', $validator->errors());
             }
 
-            $username = $request->username;
-            $password = $request->password;
+            $username = $_data['username'];
+            $password = $_data['password'];
             $secretHash = $this->calculateSecretHash($username);
             $endpoint = "https://cognito-idp.{$this->region}.amazonaws.com/";
 

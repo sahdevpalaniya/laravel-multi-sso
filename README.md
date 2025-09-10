@@ -216,10 +216,10 @@ Route::post('/sso/aws/login', function (Request $request) {
 #### Get User Details
 
 ```php
-Route::post('/sso/aws/user-details', function (Request $request) {
-    $response = SSO::driver('aws')->getUserDetails($request);
-    return response()->json($response);
-})->name('aws.user.details');
+Route::post('/aws/user-details', function ($awsResponse) {
+    $awsUserDetails = SSO::driver('aws')->getUserDetails($awsResponse['data']['accessToken']);
+    return response()->json($awsUserDetails);
+})->name('aws.user-details');
 ```
 
 | Parameter      | Type     | Required | Description                        |
@@ -229,8 +229,8 @@ Route::post('/sso/aws/user-details', function (Request $request) {
 #### Logout User
 
 ```php
-Route::post('/sso/aws/logout', function (Request $request) {
-    $response = SSO::driver('aws')->logout($request);
+Route::post('/sso/aws/logout', function ($awsResponse) {
+    $response = SSO::driver('aws')->logout($awsResponse['data']['accessToken']);
     return response()->json($response);
 })->name('aws.logout');
 ```

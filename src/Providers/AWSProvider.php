@@ -168,20 +168,19 @@ class AWSProvider
         }
     }
 
-    public function logout(Request $request)
+    public function logout($accessToken)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'access_token' => 'required|string',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->formatResponse('error', 400, 'Validation failed', $validator->errors());
+            if (empty($accessToken)) {
+                return $this->formatResponse(
+                    'error',
+                    400,
+                    'Validation failed',
+                    ['access_token' => ['The access_token field is required and must be a string.']]
+                );
             }
 
-            $accessToken = $request->access_token;
             $endpoint = "https://cognito-idp.{$this->region}.amazonaws.com/";
-
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-amz-json-1.1',
                 'X-Amz-Target' => 'AWSCognitoIdentityProviderService.GlobalSignOut',
@@ -199,18 +198,18 @@ class AWSProvider
         }
     }
 
-    public function getUserDetails(Request $request)
+    public function getUserDetails($accessToken)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'access_token' => 'required|string',
-            ]);
-
-            if ($validator->fails()) {
-                return $this->formatResponse('error', 400, 'Validation failed', $validator->errors());
+            if (empty($accessToken)) {
+                return $this->formatResponse(
+                    'error',
+                    400,
+                    'Validation failed',
+                    ['access_token' => ['The access_token field is required and must be a string.']]
+                );
             }
 
-            $accessToken = $request->access_token;
             $endpoint = "https://cognito-idp.{$this->region}.amazonaws.com/";
 
             $response = Http::withHeaders([
@@ -221,7 +220,12 @@ class AWSProvider
             ]);
 
             if (!$response->successful()) {
-                return $this->formatResponse('error', $response->status(), 'Failed to fetch user details', $response->json());
+                return $this->formatResponse(
+                    'error',
+                    $response->status(),
+                    'Failed to fetch user details',
+                    $response->json()
+                );
             }
 
             $userData = $response->json();
@@ -231,7 +235,9 @@ class AWSProvider
 
             return $this->formatResponse('success', 200, 'User details retrieved successfully', $attributes);
         } catch (\Exception $e) {
-            return $this->formatResponse('error', 500, 'An unexpected error occurred', ['exception' => $e->getMessage()]);
+            return $this->formatResponse('error', 500, 'An unexpected error occurred', [
+                'exception' => $e->getMessage()
+            ]);
         }
     }
 }

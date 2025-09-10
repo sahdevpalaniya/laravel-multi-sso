@@ -167,17 +167,18 @@ class AWSProvider
         }
     }
 
-    public function logout($accessToken)
+    public function logout(array $_data)
     {
         try {
-            if (empty($accessToken)) {
-                return $this->formatResponse(
-                    'error',
-                    400,
-                    'Validation failed',
-                    ['access_token' => ['The access_token field is required and must be a string.']]
-                );
+            $validator = Validator::make($_data, [
+                'access_token' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return $this->formatResponse('error', 400, 'Validation failed', $validator->errors());
             }
+
+            $accessToken = $_data['access_token'];
 
             $endpoint = "https://cognito-idp.{$this->region}.amazonaws.com/";
             $response = Http::withHeaders([
@@ -197,17 +198,18 @@ class AWSProvider
         }
     }
 
-    public function getUserDetails($accessToken)
+    public function getUserDetails(array $_data)
     {
         try {
-            if (empty($accessToken)) {
-                return $this->formatResponse(
-                    'error',
-                    400,
-                    'Validation failed',
-                    ['access_token' => ['The access_token field is required and must be a string.']]
-                );
+            $validator = Validator::make($_data, [
+                'access_token' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return $this->formatResponse('error', 400, 'Validation failed', $validator->errors());
             }
+
+            $accessToken = $_data['access_token'];
 
             $endpoint = "https://cognito-idp.{$this->region}.amazonaws.com/";
 

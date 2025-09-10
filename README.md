@@ -246,31 +246,37 @@ $response = SSO::driver('aws')->login($credentials);
 
 #### Get User Details
 
+To get user details, you need to provide a valid `accessToken` obtained after a successful login.
+
 ```php
-Route::post('/aws/user-details', function (Reuqest $request) {
-    $awsResponse = SSO::driver('aws')->login($request);
-    $awsUserDetails = SSO::driver('aws')->getUserDetails($awsResponse['data']['accessToken']);
+Route::post('/aws/user-details', function (Request $request) {
+    // The access token should be passed in the request body.
+    $data = ['access_token' => $request->input('access_token')];
+    $awsUserDetails = SSO::driver('aws')->getUserDetails($data);
     return response()->json($awsUserDetails);
 })->name('aws.user-details');
 ```
 
 | Parameter      | Type     | Required | Description                        |
 | -------------- | -------- | -------- | ---------------------------------- |
-| `access_token` | `string` | Yes      | Access token received after login. |
+| `access_token` | `string` | Yes      | The access token for the user.     |
 
 #### Logout User
 
+To log out a user, you need to provide a valid `accessToken` obtained after a successful login.
+
 ```php
-Route::post('/sso/aws/logout', function (Reuqest $request) {
-    $awsResponse = SSO::driver('aws')->login($request);
-    $response = SSO::driver('aws')->logout($awsResponse['data']['accessToken']);
+Route::post('/sso/aws/logout', function (Request $request) {
+    // The access token should be passed in the request body.
+    $data = ['access_token' => $request->input('access_token')];
+    $response = SSO::driver('aws')->logout($data);
     return response()->json($response);
 })->name('aws.logout');
 ```
 
 | Parameter      | Type     | Required | Description                        |
 | -------------- | -------- | -------- | ---------------------------------- |
-| `access_token` | `string` | Yes      | Access token received after login. |
+| `access_token` | `string` | Yes      | The access token for the user.     |
 
 ---
 
